@@ -33,7 +33,7 @@ namespace LaTexRendering
         private static string ConvertExpression(Entity expr)
         {
             // E.g. @"\frac23"
-            return @"\frac23";
+            return expr.Latexise();
         }
         #endregion
 
