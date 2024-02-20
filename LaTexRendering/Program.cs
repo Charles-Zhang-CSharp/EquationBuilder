@@ -7,7 +7,7 @@ namespace LaTexRendering
     {
         static void Main(string[] args)
         {
-            string input = @"sqrt(sum((V-u)^2)/n)";
+            string input = @"sqrt(sum((V-u)^2)/n)"; // Comment: At the moment AngouriMath is not capable of comprehending vectors
             string equation = ParseInput(input);
 
             MathPainter painter = new() { LaTeX = equation }; // or TextPainter
