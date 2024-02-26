@@ -7,13 +7,45 @@ namespace EquationBuilder
     {
         static void Main(string[] args)
         {
-            string input = @"sqrt(sum((V-u)^2)/n)"; // Comment: At the moment AngouriMath is not capable of comprehending vectors
-            string equation = ParseInput(input);
+            if (args.Length == 0 || args.First() == "--help")
+            {
+                Console.WriteLine("""
+                    EquationBuilder --help: Print this help
+                    EquationBuilder <Expression>: Generate outputs based on expression
 
+                    Example: 
+                      EquationBuilder sqrt(sum((V-u)^2)/n)
+                    """);
+                return;
+            }
+            // Check correct number of arguments
+            if (args.Length != 1)
+            {
+                Console.WriteLine("Error: Incorrect number of arguments");
+                return;
+            }
+
+            string inputExpression = args[0];
+            string outputPath = "Equation.png";
+            GenerateFromExpression(inputExpression, outputPath);
+        }
+
+        private static void GenerateFromExpression(string inputExpression, string outputPath)
+        {
+            // Parse inputs
+            string equation = ParseInput(inputExpression);
+
+            // Get LaTeX
+            // ...
+
+            // Generate rendering
             MathPainter painter = new() { LaTeX = equation }; // or TextPainter
-            using Stream? png = painter.DrawAsStream(format: SkiaSharp.SKEncodedImageFormat.Png);
-            using FileStream output = File.OpenWrite(args[0]);
+            using Stream png = painter.DrawAsStream(format: SkiaSharp.SKEncodedImageFormat.Png)!;
+            using FileStream output = File.OpenWrite(outputPath);
             png.CopyTo(output);
+
+            // Generate metadata output
+            // ...
         }
 
         #region Routines
