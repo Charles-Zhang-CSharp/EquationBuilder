@@ -43,10 +43,8 @@ namespace EquationBuilder
             File.WriteAllText(Path.Combine(outputPath, $"{outputName}.txt"), equation);
 
             // Generate rendering
-            MathPainter painter = new() { LaTeX = equation }; // or TextPainter
-            using Stream png = painter.DrawAsStream(format: SkiaSharp.SKEncodedImageFormat.Png)!;
-            using FileStream output = File.OpenWrite(Path.Combine(outputPath, $"{outputName}.png"));
-            png.CopyTo(output);
+            string imagePath = Path.Combine(outputPath, $"{outputName}.png");
+            SaveLaTeXImage(equation, imagePath);
 
             // Generate metadata output
             string report = AnalyzeExpression(expressionEntity);
@@ -54,6 +52,13 @@ namespace EquationBuilder
         }
 
         #region Routines
+        private static void SaveLaTeXImage(string equation, string imagePath)
+        {
+            MathPainter painter = new() { LaTeX = equation }; // or TextPainter
+            using Stream png = painter.DrawAsStream(format: SkiaSharp.SKEncodedImageFormat.Png)!;
+            using FileStream output = File.OpenWrite(imagePath);
+            png.CopyTo(output);
+        }
         private static string ParseInput(string input, out Entity expressionEntity)
         {
             expressionEntity = MathS.FromString(input); // This gives us a tree structure
