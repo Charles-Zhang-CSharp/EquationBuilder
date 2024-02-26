@@ -1,5 +1,6 @@
 ﻿using AngouriMath;
 using CSharpMath.SkiaSharp;
+using System.Text;
 
 namespace EquationBuilder
 {
@@ -11,7 +12,7 @@ namespace EquationBuilder
             {
                 Console.WriteLine("""
                     EquationBuilder --help: Print this help
-                    EquationBuilder <Expression>: Generate outputs based on expression
+                    EquationBuilder <Expression> <Output Folder> <Output Name>: Generate outputs based on expression
 
                     Example: 
                       EquationBuilder sqrt(sum((V-u)^2)/n)
@@ -19,47 +20,52 @@ namespace EquationBuilder
                 return;
             }
             // Check correct number of arguments
-            if (args.Length != 1)
+            if (args.Length != 3)
             {
                 Console.WriteLine("Error: Incorrect number of arguments");
                 return;
             }
 
             string inputExpression = args[0];
-            string outputPath = "Equation.png";
-            GenerateFromExpression(inputExpression, outputPath);
+            string outputPath = Path.GetFullPath(args[1]);
+            string outputName = args[2];
+            Directory.CreateDirectory(outputPath);
+
+            GenerateFromExpression(inputExpression, outputPath, outputName);
         }
 
-        private static void GenerateFromExpression(string inputExpression, string outputPath)
+        private static void GenerateFromExpression(string inputExpression, string outputPath, string outputName)
         {
             // Parse inputs
-            string equation = ParseInput(inputExpression);
+            string equation = ParseInput(inputExpression, out Entity expressionEntity);
 
             // Get LaTeX
-            // ...
+            File.WriteAllText(Path.Combine(outputPath, $"{outputName}.txt"), equation);
 
             // Generate rendering
             MathPainter painter = new() { LaTeX = equation }; // or TextPainter
             using Stream png = painter.DrawAsStream(format: SkiaSharp.SKEncodedImageFormat.Png)!;
-            using FileStream output = File.OpenWrite(outputPath);
+            using FileStream output = File.OpenWrite(Path.Combine(outputPath, $"{outputName}.png"));
             png.CopyTo(output);
 
             // Generate metadata output
-            // ...
+            string report = AnalyzeExpression(expressionEntity);
+            File.WriteAllText(Path.Combine(outputPath, $"{outputName}.yaml"), report);
         }
 
         #region Routines
-        private static string ParseInput(string input)
+        private static string ParseInput(string input, out Entity expressionEntity)
         {
-            Entity expr = MathS.FromString(input); // This gives us a tree structure
-            Report(expr); // Analysis us
-            return ConvertExpression(expr);
+            expressionEntity = MathS.FromString(input); // This gives us a tree structure
+            return ConvertExpression(expressionEntity);
         }
 
-        private static void Report(Entity expr)
+        private static string AnalyzeExpression(Entity expr)
         {
+            StringBuilder builder = new();
             var variables = GatherVariables(expr);
-            Console.WriteLine($"Variables: {string.Join(", ", variables)}");
+            builder.AppendLine($"Variables: {string.Join(", ", variables)}");
+            return builder.ToString().TrimEnd();
         }
 
         private static string ConvertExpression(Entity expr)
