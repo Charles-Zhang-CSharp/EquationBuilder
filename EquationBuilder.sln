@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34322.80
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LaTexRendering", "LaTexRendering\LaTexRendering.csproj", "{F54C011A-BED6-4382-B0F9-03A4FEBEBF53}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EquationBuilder", "EquationBuilder\EquationBuilder.csproj", "{F54C011A-BED6-4382-B0F9-03A4FEBEBF53}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E74DE232-A5E2-42FF-A0AB-32C7FD6A24A8}"
 	ProjectSection(SolutionItems) = preProject

@@ -1,7 +1,7 @@
 ﻿using AngouriMath;
 using CSharpMath.SkiaSharp;
 
-namespace LaTexRendering
+namespace EquationBuilder
 {
     internal class Program
     {
